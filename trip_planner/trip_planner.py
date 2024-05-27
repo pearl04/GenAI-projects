@@ -2,19 +2,13 @@ import streamlit as st
 import openai
 from dotenv import load_dotenv
 import os
-import time
 
 # Load environment variables from .env file
 load_dotenv()
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-# Set a limit for API calls per session and time window
+# Set a limit for API calls per session
 CALL_LIMIT = 5
-TIME_WINDOW = 3600  # 1 hour in seconds
-
-if 'api_call_count' not in st.session_state:
-    st.session_state.api_call_count = 0
-    st.session_state.start_time = time.time()
 
 def user_input_form():
     st.title("Trip Planner - Demo")
@@ -35,15 +29,11 @@ def generate_trip_suggestions(destination, travel_dates, interests):
         ],
         max_tokens=150
     )
-    return response.choices[0].message["content"].strip()
+    return response['choices'][0]['message']['content'].strip()
 
 def main():
-    current_time = time.time()
-    elapsed_time = current_time - st.session_state.start_time
-
-    if elapsed_time > TIME_WINDOW:
+    if 'api_call_count' not in st.session_state:
         st.session_state.api_call_count = 0
-        st.session_state.start_time = current_time
 
     if st.session_state.api_call_count >= CALL_LIMIT:
         st.warning("API call limit reached. Please try again later.")
