@@ -29,7 +29,7 @@ def generate_trip_suggestions(destination, travel_dates, interests):
         ],
         max_tokens=150
     )
-    return response['choices'][0]['message']['content'].strip()
+    return response.choices[0].message['content'].strip()
 
 def main():
     if 'api_call_count' not in st.session_state:
