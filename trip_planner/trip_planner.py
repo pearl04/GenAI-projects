@@ -1,12 +1,13 @@
 import streamlit as st
 import openai
-from dotenv import load_dotenv
-import os
+from openai import OpenAI
 
-# Load environment variables from .env file
-load_dotenv()
-openai.api_key = os.getenv('OPENAI_API_KEY')
 
+# Initialize the Streamlit app
+st.title("OpenAI Chatbot")
+
+# Fetch API key from Streamlit secrets
+openai.api_key = st.secrets["openai"]["api_key"]
 # Set a limit for API calls per session
 CALL_LIMIT = 5
 
@@ -21,7 +22,9 @@ def user_input_form():
 
 def generate_trip_suggestions(destination, travel_dates, interests):
     prompt = f"I am planning a trip to {destination} from {travel_dates}. I am interested in {interests}. Can you suggest an itinerary?"
-    response = openai.ChatCompletion.create(
+    client = OpenAI()
+
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
