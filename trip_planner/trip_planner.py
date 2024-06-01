@@ -7,13 +7,13 @@ import os
 api_key = st.secrets["open_ai"]["api_key"]
 
 # Initialize the OpenAI client with the API key
-client = OpenAI(api_key)
+#client = OpenAI(api_key)
 
 # Initialize the Streamlit app
 st.title("OpenAI Chatbot")
 
 # Fetch API key from Streamlit secrets
-#openai.api_key = st.secrets["openai"]["api_key"]
+openai.api_key = api_key
 # Set a limit for API calls per session
 #CALL_LIMIT = 5
 
@@ -31,7 +31,7 @@ def user_input_form():
 
 def generate_trip_suggestions(destination, travel_dates, interests, transport_mode, budget,people):
     prompt = f"I am planning a trip to {destination} from {travel_dates}. I am interested in {interests}. My budget is {budget} and I would prefer travelling within place by {transport_mode}. We are {people} travelling . Can you suggest a detailed itinerary?"
-    response = client.chat.completions.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a very enthusiastic trip planning assistant."},
@@ -39,8 +39,8 @@ def generate_trip_suggestions(destination, travel_dates, interests, transport_mo
         ],
         #max_tokens=150
     )
-    return response.choices[0].message['content'].strip()
-
+    #return response.choices[0].message['content'].strip()
+    return response.choices[0].message.content
 def main():
     destination, travel_dates, interests, transport_mode, budget, people = user_input_form()
     if destination and travel_dates and interests and transport_mode and budget and people:
