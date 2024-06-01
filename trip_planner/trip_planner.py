@@ -3,8 +3,12 @@ import openai
 from openai import OpenAI
 import os
 
-# Fetch API key from Streamlit secrets
-#openai.api_key=st.secrets['open_ai']['api_key']
+# Accessing the API key from Streamlit secrets
+api_key = st.secrets["open_ai"]["api_key"]
+
+# Initialize the OpenAI client with the API key
+client = OpenAI(api_key)
+
 # Initialize the Streamlit app
 st.title("OpenAI Chatbot")
 
@@ -18,16 +22,15 @@ def user_input_form():
     destination = st.text_input("Destination", "Paris")
     travel_dates = st.text_input("Travel Dates", "June 10 - June 20")
     interests = st.text_input("Interests", "Museums, Food, History")
-    transport_mode=st.text_input("Public transport")
-    budget=st.text_input("500$")
-    people=st.text_input("2")
+    transport_mode=st.text_input("Transport mode preferred" , "Public transport")
+    budget=st.text_input("Approx. budget (mention currency)", "500$")
+    people=st.text_input("Number of people travelling","2")
     if st.button("Plan My Trip"):
         return destination, travel_dates, interests, transport_mode, budget, people
     return None, None, None, None, None, None
 
 def generate_trip_suggestions(destination, travel_dates, interests, transport_mode, budget,people):
     prompt = f"I am planning a trip to {destination} from {travel_dates}. I am interested in {interests}. My budget is {budget} and I would prefer travelling within place by {transport_mode}. We are {people} travelling . Can you suggest a detailed itinerary?"
-    client = OpenAI(st.secrets['open_ai']['api_key'])
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
