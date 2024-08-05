@@ -7,6 +7,13 @@ from langchain.vectorstores import FAISS
 from langchain.docstore import InMemoryDocstore
 from langchain.embeddings import OpenAIEmbeddings
 
+
+index_path = os.path.join(os.path.dirname(__file__), 'faiss_index.bin')
+chunks_path = os.path.join(os.path.dirname(__file__), 'chunks.pkl')
+docstore_path = os.path.join(os.path.dirname(__file__), 'docstore.pkl')
+index_to_docstore_id_path = os.path.join(os.path.dirname(__file__), 'index_to_docstore_id.pkl')
+
+
 # Load the FAISS index
 index = faiss.read_index('faiss_index.bin')
 
